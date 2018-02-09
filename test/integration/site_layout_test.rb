@@ -59,4 +59,13 @@ class SiteLayoutTest < ActionDispatch::IntegrationTest
     assert_template 'users/new'
     assert_select "title", full_title("Sign up")
   end
+
+  test "stat display when login" do
+    log_in_as(@user)
+    get root_path
+    assert_select "a[href=?]", following_user_path(@user)
+    assert_match @user.following.count.to_s, response.body
+    assert_select "a[href=?]", followers_user_path(@user)
+    assert_match @user.followers.count.to_s, response.body
+  end
 end
